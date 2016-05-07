@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_id": "egather-1256",
+    "project_number": "1026941775490",
+    "name": "eGather"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026941775490:android:d0b847146bda6e53",
+        "client_id": "android:com.rinaldi.jesse.egather",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.rinaldi.jesse.egather",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026941775490-te3cnltn571dimcceugqc1ieh19pvvg7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rinaldi.jesse.egather",
+            "certificate_hash": "75DA3C18E79C0F127DA55E00AE0709204EBD8DB4"
+          }
+        },
+        {
+          "client_id": "1026941775490-u1inidih73q5di5091n2k806ce812su4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.rinaldi.jesse.egather.EventEditor"
+    android:background="#eeeeee">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="New Event"
+                android:id="@+id/lblTitle"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textAlignment="center"
+                android:textStyle="bold|italic"
+                android:singleLine="true"
+                android:typeface="sans" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@+id/lblTitle"
+                android:layout_alignParentStart="true"
+                android:background="#9e9e9e"
+                android:id="@+id/space" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Name:"
+                android:id="@+id/lblName"
+                android:layout_below="@+id/space"
+                android:layout_alignParentStart="true"
+                 />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtName"
+                android:layout_below="@+id/lblName"
+                android:layout_alignParentStart="true"
+                android:hint="Required*"
+                android:background="#ffffff"
+                android:singleLine="true"
+                android:elegantTextHeight="false"
+                android:enabled="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Address:"
+                android:id="@+id/lblAddress"
+                android:layout_below="@+id/txtName"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:ems="10"
+                android:id="@+id/txtAddress"
+                android:layout_below="@+id/lblAddress"
+                android:layout_alignParentStart="true"
+                android:clickable="true"
+                android:background="#ffffff"
+                android:editable="true"
+                android:enabled="true"
+                android:focusable="true"
+                android:hint="Street Address"
+                android:singleLine="true"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtCity"
+                android:layout_below="@+id/txtAddress"
+                android:layout_alignParentStart="true"
+                android:width="150dp"
+                android:hint="City"
+                android:enabled="true"
+                android:editable="true"
+                android:clickable="true"
+                android:background="#ffffff"
+                android:layout_marginTop="5dp"
+                android:singleLine="true"/>
+
+            <Spinner
+                android:layout_width="75dp"
+                android:layout_height="25dp"
+                android:id="@+id/spState"
+                android:layout_alignTop="@+id/txtCity"
+                android:layout_toEndOf="@+id/txtCity"
+                android:background="#ffffff"
+                android:layout_marginLeft="5dp"
+                android:spinnerMode="dialog"
+                android:transitionGroup="false" />
+
+            <EditText
+                android:layout_width="145dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtZip"
+                android:width="150dp"
+                android:hint="Zip"
+                android:enabled="true"
+                android:editable="true"
+                android:clickable="true"
+                android:background="#ffffff"
+                android:layout_alignTop="@+id/spState"
+                android:layout_alignParentEnd="true"
+                android:inputType="number"
+                android:numeric="integer"
+                android:singleLine="true"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Date &amp; Time:"
+                android:id="@+id/lblDateTime"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/txtCity"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/txtDate"
+                android:hint="Date"
+                android:background="#ffffff"
+                android:singleLine="true"
+                android:elegantTextHeight="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/lblDateTime"
+                android:layout_alignParentBottom="false"
+                android:layout_alignWithParentIfMissing="false" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
