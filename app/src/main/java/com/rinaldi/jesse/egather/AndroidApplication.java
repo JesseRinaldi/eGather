@@ -18,6 +18,5 @@ public class AndroidApplication extends Application {
         super.onCreate();
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase(FIREBASE_URL);
-
     }
 }

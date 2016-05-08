@@ -31,6 +31,7 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestProfile()
                 .build();
 
         application = (AndroidApplication) getApplicationContext();
@@ -39,7 +40,6 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
                 .addOnConnectionFailedListener(this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
 
     }
 
