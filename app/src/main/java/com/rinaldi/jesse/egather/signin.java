@@ -3,16 +3,22 @@ package com.rinaldi.jesse.egather;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+
 import android.support.v7.app.AppCompatActivity;
+
+import java.io.IOException;
 
 /**
  * Created by Jesse on 3/16/2016.
@@ -30,6 +36,7 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         btnSignIn.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestServerAuthCode(getString(R.string.serverClientID))
                 .requestEmail()
                 .requestProfile()
                 .build();
@@ -81,11 +88,10 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         //Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            //GoogleSignInAccount acct = result.getSignInAccount();
-            //Toast.makeText(this, acct.getDisplayName() + " Connected!", Toast.LENGTH_LONG).show();
+            GoogleSignInAccount acct = result.getSignInAccount();
+            Toast.makeText(this, acct.getDisplayName() + " Connected", Toast.LENGTH_LONG).show();
+            application.authUser(acct);
             super.finish();
-            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-            //updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
             //updateUI(false);

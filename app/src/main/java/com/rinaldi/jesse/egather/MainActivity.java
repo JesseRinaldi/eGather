@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,11 +14,18 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private GoogleApiClient gAPI;
     private ListView lstManageEvent;
+    private ArrayList<String> eventNames = new ArrayList<>();
+    private DataSnapshot currentSnapshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,37 +34,21 @@ public class MainActivity extends AppCompatActivity {
         gAPI = application.gAPI;
 
         setContentView(R.layout.activity_main);
-        setupTabHost();
+
         Intent intent = new Intent(this, signin.class);
         startActivity(intent);
 
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.ManageEventsOptions, R.layout.da_item);
+        application.mFirebaseRef.addValueEventListener(valueEventListener);
+    /*
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.ManageEventsOptions, android.R.layout.simple_list_item_1);
         lstManageEvent = (ListView) findViewById(R.id.lstManageEvents);
         lstManageEvent.setAdapter(arrayAdapter);
-        listViewClickListener();
-
+        listViewClickListener(); */
             ///DELETE
-        Intent i = new Intent(getBaseContext(), EventEditor.class);
-        startActivity(i);
+       //Intent i = new Intent(getBaseContext(), EventCreator.class);
+        //startActivity(i);
     }
 
-    public void setupTabHost(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        TabHost tabHost = (TabHost)findViewById(R.id.tabHost);
-        tabHost.setup();
-
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec("browse");
-        tabSpec.setContent(R.id.tabBrowse);
-        tabSpec.setIndicator("Browse Events");
-        tabHost.addTab(tabSpec);
-
-        tabSpec = tabHost.newTabSpec("tabManageEvents");
-        tabSpec.setContent(R.id.tabManageEvents);
-        tabSpec.setIndicator("Manage Events");
-        tabHost.addTab(tabSpec);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,11 +77,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> paret, View viewClicked, int position, long id) {
                 TextView textView = (TextView) viewClicked;
-                if (textView.getText() == "New Event") {
-                    Intent intent = new Intent(getBaseContext(), EventEditor.class);
+                if (textView.getText().equals("New Event")) {
+                    Intent intent = new Intent(getBaseContext(), EventCreator.class);
                     startActivity(intent);
                 }
             }
         });
     }
+
+    private ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            currentSnapshot = dataSnapshot;
+            for (DataSnapshot child : dataSnapshot.child("events").getChildren()) {
+                Log.d("EVENT", child.child("name").getValue().toString());
+                eventNames.add(child.child("name").getValue().toString());
+                ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, eventNames);
+                lstManageEvent = (ListView) findViewById(R.id.lstManageEvents);
+                lstManageEvent.setAdapter(arrayAdapter);
+                listViewClickListener();
+            }
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+
+        }
+    };
 }

@@ -3,6 +3,7 @@
     package="com.rinaldi.jesse.egather" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
@@ -28,7 +29,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".signin" />
-        <activity android:name=".EventEditor" />
+        <activity android:name=".EventCreator" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="@string/GooglePlaceAPI"></meta-data>
     </application>
 
 </manifest>

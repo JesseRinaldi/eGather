@@ -1,12 +1,17 @@
 package com.rinaldi.jesse.egather;
 
+import com.google.android.gms.location.places.Place;
+
 /**
  * Created by Jesse on 4/30/2016.
  */
 public class Event {
-    private String name, address, city, state, zip, body, website, mod;
-    private Genre genre; private WebsiteType websiteType;
-    private Double price;
+    private String name, body, website, websiteTitle, category, photoURL, mod;
+    private int month=-1, day=-1, year=-1, startHour=-1, startMinute=-1, endHour=-1, endMinute=-1;
+    private Boolean inviteOnly, closedInvites;
+    private String[] tags;
+    private Place location;
+
     public Event() {}
     public Event(String name) {
         this.name = name;
@@ -21,39 +26,12 @@ public class Event {
         return this;
     }
 
-    public String getAddress() {
-        return address;
+    public Place getLocation() {
+        return location;
     }
 
-    public Event setAddress(String address) {
-        this.address = address;
-        return this;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public Event setCity(String city) {
-        this.city = city;
-        return this;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public Event setState(String state) {
-        this.state = state;
-        return this;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public Event setZip(String zip) {
-        this.zip = zip;
+    public Event setLocation(Place location) {
+        this.location = location;
         return this;
     }
 
@@ -75,6 +53,15 @@ public class Event {
         return this;
     }
 
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public Event setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+        return this;
+    }
+
     public String getMod() {
         return mod;
     }
@@ -84,38 +71,93 @@ public class Event {
         return this;
     }
 
-    public Genre getGenre() {
-        return genre;
+    public String getCategory() {
+        return category;
     }
 
-    public Event setGenre(Genre genre) {
-        this.genre = genre;
+    public Event setCategory(String category) {
+        this.category = category;
         return this;
     }
 
-    public WebsiteType getWebsiteType() {
-        return websiteType;
+    public String getWebsiteTitle() {
+        return websiteTitle;
     }
 
-    public Event setWebsiteType(WebsiteType websiteType) {
-        this.websiteType = websiteType;
+    public Event setWebsiteTitle(String websiteTitle) {
+        this.websiteTitle = websiteTitle;
         return this;
     }
 
-    public Double getPrice() {
-        return price;
-    }
+    public String[] getTags() { return tags; }
 
-    public Event setPrice(Double price) {
-        this.price = price;
+    public Event setTags(String tags) {
+        this.tags = tags.split(",");
+        for (int i = 0; i < this.tags.length; i++){
+            this.tags[i].trim();
+        }
         return this;
     }
 
-    public enum Genre {
-        MUSIC, COMEDY, SPORTS, PARTY, ENTERTAINMENT, THEATER, CONVENTION, FESTIVAL, OTHER
+    public Boolean getInviteOnly() {
+        return inviteOnly;
     }
-    public enum WebsiteType {
-        FACEBOOK, TWITTER, INSTAGRAM, TICKETMASTER, REVERBNATION, LIVENATION, BANDCAMP, OTHER
+
+    public Event setInviteOnly(Boolean inviteOnly) {
+        this.inviteOnly = inviteOnly;
+        return this;
+    }
+
+    public Boolean getClosedInvites() {
+        return closedInvites;
+    }
+
+    public Event setClosedInvites(Boolean closedInvites) {
+        this.closedInvites = closedInvites;
+        return this;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public Event setDate(int month, int day, int year) {
+        this.month = month;
+        this.day = day;
+        this.year = year;
+        return this;
+    }
+
+    public int getStartHour() {
+        return startHour;
+    }
+
+    public int getStartMinute() {
+        return startMinute;
+    }
+
+    public int getEndHour() {
+        return endHour;
+    }
+
+    public int getEndMinute() {
+        return endMinute;
+    }
+
+    public Event setTime(int startHour, int startMinute, int endHour, int endMinute) {
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        return this;
     }
 }
 

@@ -3,54 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/loRel">
+    android:id="@+id/parentLayout"
+    android:background="@color/colorPrimary">
 
-    <TabHost
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tabHost">
+        android:layout_height="wrap_content"
+        android:text="Events"
+        android:id="@+id/lblEvents"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="false"
+        android:textColor="@android:color/white"
+        android:textSize="14dp"
+        android:background="@android:color/black"
+        android:layout_marginTop="100dp" />
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/colorPrimary"
-                android:focusable="true" />
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <LinearLayout
-                    android:id="@+id/tabBrowse"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical"
-                    android:layout_gravity="center_horizontal|top"/>
-
-                <LinearLayout
-                    android:id="@+id/tabManageEvents"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical">
-
-                    <ListView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/lstManageEvents"
-                        android:choiceMode="multipleChoice" />
-                </LinearLayout>
-
-            </FrameLayout>
-        </RelativeLayout>
-    </TabHost>
-
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lstManageEvents"
+        android:layout_below="@+id/lblEvents"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.rinaldi.jesse.egather.EventEditor"
+    tools:context=".EventCreator"
     android:background="#eeeeee">
 
     <ScrollView
@@ -35,7 +35,7 @@
                 android:id="@+id/txtName"
                 android:layout_below="@+id/lblName"
                 android:layout_alignParentStart="true"
-                android:hint="Required*"
+                android:hint="(Required*)"
                 android:background="#ffffff"
                 android:singleLine="true"
                 android:elegantTextHeight="false"
@@ -53,66 +53,21 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="5dp" />
 
-            <EditText
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:inputType="textPostalAddress"
                 android:ems="10"
-                android:id="@+id/txtAddress"
+                android:id="@+id/txtLocation"
                 android:layout_below="@+id/lblLocation"
                 android:layout_alignParentStart="true"
                 android:clickable="true"
                 android:background="#ffffff"
-                android:editable="true"
                 android:enabled="true"
                 android:focusable="true"
-                android:hint="Street Address"
+                android:hint="(Required*)"
                 android:singleLine="true"/>
-
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtCity"
-                android:layout_below="@+id/txtAddress"
-                android:layout_alignParentStart="true"
-                android:width="175dp"
-                android:hint="City"
-                android:enabled="true"
-                android:clickable="true"
-                android:background="#ffffff"
-                android:layout_marginTop="5dp"
-                android:singleLine="true"
-                android:layout_toLeftOf="@+id/spState" />
-
-            <Spinner
-                android:layout_width="50dp"
-                android:layout_height="25dp"
-                android:id="@+id/spState"
-                android:background="#ffffff"
-                android:layout_marginLeft="5dp"
-                android:spinnerMode="dropdown"
-                android:transitionGroup="false"
-                android:scrollIndicators="right"
-                android:layout_toLeftOf="@+id/txtZip"
-                android:layout_below="@+id/txtAddress"
-                android:layout_marginTop="5dp" />
-
-            <EditText
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtZip"
-                android:width="100dp"
-                android:hint="Zip"
-                android:enabled="true"
-                android:editable="true"
-                android:clickable="true"
-                android:background="#ffffff"
-                android:layout_alignParentEnd="true"
-                android:inputType="number"
-                android:singleLine="true"
-                android:layout_marginLeft="5dp"
-                android:layout_below="@+id/txtAddress"
-                android:layout_marginTop="5dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -123,15 +78,15 @@
                 android:layout_alignParentBottom="false"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/txtCity"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/txtLocation" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/txtDate"
-                android:hint="Date"
+                android:hint="Date (Required*)"
                 android:background="#ffffff"
                 android:singleLine="true"
                 android:elegantTextHeight="false"
@@ -173,8 +128,7 @@
                     android:layout_alignWithParentIfMissing="false"
                     android:layout_weight="0.43"
                     android:width="100dp"
-                    android:inputType="time"
-                    android:editable="false" />
+                    android:inputType="time" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -228,7 +182,6 @@
                 android:id="@+id/txtWebsiteLink"
                 android:clickable="true"
                 android:background="#ffffff"
-                android:editable="true"
                 android:enabled="true"
                 android:focusable="true"
                 android:hint="Link"
@@ -244,7 +197,6 @@
                 android:id="@+id/txtWebsiteTitle"
                 android:clickable="true"
                 android:background="#ffffff"
-                android:editable="true"
                 android:enabled="true"
                 android:focusable="true"
                 android:hint="Title (TicketMaster, Facebook, etc.)"
@@ -284,10 +236,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/lblCategory"
+                android:text="Category:"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/txtDescription" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spCategory"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="62dp"
+                android:layout_below="@+id/lblCategory"
+                android:layout_margin="0dp"
+                android:spinnerMode="dropdown"
+                android:background="@color/common_google_signin_btn_text_dark_disabled" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/lblTags"
                 android:text="Tags:"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/txtDescription"
+                android:layout_below="@+id/spCategory"
                 android:layout_marginTop="5dp" />
 
             <EditText
