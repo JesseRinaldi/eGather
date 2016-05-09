@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="GooglePlaceAPI">AIzaSyDS73GPTQZKdVxUjINfajqoGXmntmgc-6Y</string>
     <string name="serverClientID">1026941775490-u1inidih73q5di5091n2k806ce812su4.apps.googleusercontent.com</string>
+    <string name="create_event">New Event</string>
 
     <string-array name="ManageEventsOptions">
         <item>New Event</item>

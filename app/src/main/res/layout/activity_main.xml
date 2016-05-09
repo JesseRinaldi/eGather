@@ -2,26 +2,40 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
+
     tools:context="com.rinaldi.jesse.egather.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/parentLayout"
+            android:background="@color/colorPrimaryLight">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text=" Events"
+                    android:id="@+id/lblEvents"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="25dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:gravity="center_vertical" />
 
-    </android.support.design.widget.AppBarLayout>
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lstManageEvents"
+                    android:layout_below="@+id/lblEvents"
+                    android:layout_alignParentStart="true" />
+        </RelativeLayout>
 
-    <include
-        layout="@layout/content_main" />
+
+
+
 
 </android.support.design.widget.CoordinatorLayout>

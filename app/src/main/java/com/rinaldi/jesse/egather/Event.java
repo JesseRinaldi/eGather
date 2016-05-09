@@ -1,16 +1,20 @@
 package com.rinaldi.jesse.egather;
 
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jesse on 4/30/2016.
  */
 public class Event {
-    private String name, body, website, websiteTitle, category, photoURL, mod;
+    private String name, locationAddress, locationId, locationName, body, website, websiteTitle, category, photoURL, mod;
     private int month=-1, day=-1, year=-1, startHour=-1, startMinute=-1, endHour=-1, endMinute=-1;
     private Boolean inviteOnly, closedInvites;
-    private String[] tags;
-    private Place location;
+    private double latitude, longitude;
+    //private String[] tags;
 
     public Event() {}
     public Event(String name) {
@@ -26,12 +30,18 @@ public class Event {
         return this;
     }
 
-    public Place getLocation() {
-        return location;
-    }
+    public String getLocationAddress() { return locationAddress; }
+    public String getLocationId() { return locationId; }
+    public String getLocationName() { return locationName; }
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
 
     public Event setLocation(Place location) {
-        this.location = location;
+        this.locationAddress = location.getAddress().toString();
+        this.locationId = location.getId().toString();
+        this.locationName = location.getName().toString();
+        this.latitude = location.getLatLng().latitude;
+        this.longitude = location.getLatLng().longitude;
         return this;
     }
 
@@ -88,7 +98,7 @@ public class Event {
         this.websiteTitle = websiteTitle;
         return this;
     }
-
+/*
     public String[] getTags() { return tags; }
 
     public Event setTags(String tags) {
@@ -97,7 +107,7 @@ public class Event {
             this.tags[i].trim();
         }
         return this;
-    }
+    } */
 
     public Boolean getInviteOnly() {
         return inviteOnly;

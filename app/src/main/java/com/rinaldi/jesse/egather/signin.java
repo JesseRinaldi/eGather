@@ -3,6 +3,7 @@ package com.rinaldi.jesse.egather;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -34,6 +35,7 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         setContentView(R.layout.signin);
         btnSignIn = (SignInButton) findViewById(R.id.btnSignIn);
         btnSignIn.setOnClickListener(this);
+        getSupportActionBar().hide();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestServerAuthCode(getString(R.string.serverClientID))

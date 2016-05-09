@@ -1,5 +1,6 @@
 package com.rinaldi.jesse.egather;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,24 +14,27 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private GoogleApiClient gAPI;
     private ListView lstManageEvent;
     private ArrayList<String> eventNames = new ArrayList<>();
     private DataSnapshot currentSnapshot;
+    private AndroidApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AndroidApplication application = (AndroidApplication) getApplicationContext();
+        application = (AndroidApplication) getApplicationContext();
         gAPI = application.gAPI;
 
         setContentView(R.layout.activity_main);
@@ -38,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, signin.class);
         startActivity(intent);
 
-        application.mFirebaseRef.addValueEventListener(valueEventListener);
+
+        setTitle("Events");
+        populateListView();
     /*
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.ManageEventsOptions, android.R.layout.simple_list_item_1);
         lstManageEvent = (ListView) findViewById(R.id.lstManageEvents);
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             ///DELETE
        //Intent i = new Intent(getBaseContext(), EventCreator.class);
         //startActivity(i);
+        setTitle("Events");
     }
 
 
@@ -64,9 +71,14 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_create_event:
+                Intent i = new Intent(getBaseContext(), EventCreator.class);
+                startActivity(i);
+                populateListView();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -76,22 +88,42 @@ public class MainActivity extends AppCompatActivity {
         lstManageEvent.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> paret, View viewClicked, int position, long id) {
-                TextView textView = (TextView) viewClicked;
-                if (textView.getText().equals("New Event")) {
-                    Intent intent = new Intent(getBaseContext(), EventCreator.class);
-                    startActivity(intent);
-                }
+                final TextView textView = (TextView) viewClicked;
+                Query qRef = application.mFirebaseRef.child("events").orderByChild("name").equalTo(textView.getText().toString());
+                qRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dsEvent : dataSnapshot.getChildren()) {
+                            Event event = dsEvent.getValue(Event.class);
+                            Log.d("EVENT", event.getLocationAddress());
+                            application.activeEvent = event;
+                            Intent intent = new Intent(MainActivity.this, EventView.class);
+                            startActivity(intent);
+
+                        } //else onCancelled(null);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                        Log.e("FIREBASE ERROR", "Failed to open '" + textView.getText().toString() + "'");
+                    }
+                });
             }
         });
+    }
+
+    private void populateListView(){
+        application.mFirebaseRef.addValueEventListener(valueEventListener);
     }
 
     private ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             currentSnapshot = dataSnapshot;
-            for (DataSnapshot child : dataSnapshot.child("events").getChildren()) {
-                Log.d("EVENT", child.child("name").getValue().toString());
-                eventNames.add(child.child("name").getValue().toString());
+            eventNames.clear();
+            for (DataSnapshot dsEvent : dataSnapshot.child("events").getChildren()) {
+                Log.d("EVENT", dsEvent.child("name").getValue().toString());
+                eventNames.add(dsEvent.child("name").getValue().toString());
                 ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, eventNames);
                 lstManageEvent = (ListView) findViewById(R.id.lstManageEvents);
                 lstManageEvent.setAdapter(arrayAdapter);

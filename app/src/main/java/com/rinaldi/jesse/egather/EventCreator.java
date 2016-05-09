@@ -147,13 +147,16 @@ public class EventCreator extends AppCompatActivity implements OnClickListener {
                 .setWebsiteTitle(txtWebsiteTitle.getText().toString().trim())
                 .setBody(txtDescription.getText().toString().trim())
                 .setCategory(spCategory.getSelectedItem().toString())
-                .setTags(txtTags.getText().toString())
+               // .setTags(txtTags.getText().toString())
                 .setInviteOnly(!rbtnPublic.isChecked())
                 .setClosedInvites(!rbtnOpen.isChecked())
-                ;//.setMod(app.user.getId());
+                .setMod(app.user.getId());
         Firebase newRef = app.mFirebaseRef.child("events").push();
         newRef.setValue(event);
-
+        app.activeEvent = event;
+        Intent i = new Intent(this, EventView.class);
+        finish();  //Kill the activity from which you will go to next activity
+        startActivity(i);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,11 +199,6 @@ public class EventCreator extends AppCompatActivity implements OnClickListener {
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int selectedHour,
                               int selectedMinute) {
-            activeTime.set(Calendar.HOUR, selectedHour);
-            activeTime.set(Calendar.MINUTE, selectedMinute);
-            String AMPM = selectedHour >= 12 ? " PM" : " AM";
-            selectedHour = selectedHour % 12 == 0 ? 12 : selectedHour % 12;
-            activeTxt.setText(selectedHour + ":" + (selectedMinute<10?"0"+selectedMinute:selectedMinute) + AMPM);
             if (activeTxt.getId() == R.id.txtTimeStart) {
                 startHour = selectedHour;
                 startMinute = selectedMinute;
@@ -209,6 +207,11 @@ public class EventCreator extends AppCompatActivity implements OnClickListener {
                 endHour = selectedHour;
                 endMinute = selectedMinute;
             }
+            activeTime.set(Calendar.HOUR, selectedHour);
+            activeTime.set(Calendar.MINUTE, selectedMinute);
+            String AMPM = selectedHour >= 12 ? " PM" : " AM";
+            selectedHour = selectedHour % 12 == 0 ? 12 : selectedHour % 12;
+            activeTxt.setText(selectedHour + ":" + (selectedMinute<10?"0"+selectedMinute:selectedMinute) + AMPM);
         }
     };
 }
