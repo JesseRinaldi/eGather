@@ -1,17 +1,27 @@
 package com.rinaldi.jesse.egather;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class EventView extends Activity {
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
-    private TextView txtName, txtLocation, txtDateTime, txtDescription, txtWebsite, txtCategory;
+
+public class EventView extends AppCompatActivity {
+
+    private TextView txtName, txtLocation, txtDateTime, txtDescription, txtWebsite, txtCategory, txtMod;
+    private ImageView ivPhoto;
     private Button btnAttendEvent;
     private Event event;
 
@@ -32,12 +42,16 @@ public class EventView extends Activity {
         txtWebsite = (TextView) findViewById(R.id.txtWebsiteView);
         txtDescription = (TextView) findViewById(R.id.txtDescriptionView);
         txtCategory = (TextView) findViewById(R.id.txtCategoryView);
+        txtMod = (TextView) findViewById(R.id.txtCreatedByView);
+        ivPhoto = (ImageView) findViewById(R.id.ivPhotoView);
         btnAttendEvent = (Button) findViewById(R.id.btnCreateEvent);
     }
 
     private void setWidgets() {
 
-        txtName.setText(event.getName());
+        String name = event.getName();
+        txtName.setText(name);
+        setTitle(name);
 
 
         if (!event.getLocationAddress().contains(event.getLocationName())) {
@@ -74,6 +88,48 @@ public class EventView extends Activity {
         if (!event.getBody().isEmpty()) txtDescription.setText(event.getBody());
         else txtDescription.setVisibility(View.GONE);
         txtCategory.setText("Category: " + event.getCategory());
+
+        txtMod.setVisibility(View.GONE);
+        if (!event.getMod().isEmpty()) {
+            AndroidApplication app = (AndroidApplication) getApplicationContext();
+            app.mFirebaseRef.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child(event.getMod()).exists()) {
+                        txtMod.setVisibility(View.VISIBLE);
+                        txtMod.setText("Created by: " + dataSnapshot.child(event.getMod()).child("name").getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Log.e("MOD", "Couldn't resolve mod username");
+                }
+            });
+        }
+
+        String photoURL = event.getPhotoURL();
+        if(photoURL != null && !photoURL.isEmpty() && URLUtil.isValidUrl(photoURL)) {
+            Log.d("URL", "valid");
+            Picasso.with(this)
+                    .load(photoURL)
+                    .into(ivPhoto, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d("IMAGE", "Successfully loaded PhotoURL");
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.e("IMAGE", "PhotoURL load failed");
+                            ivPhoto.setVisibility(View.GONE);
+                        }
+            });
+        }
+        else {
+            ivPhoto.setVisibility(View.GONE);
+        }
     }
 
     private String resolveEventTime(int hour, int minute) {

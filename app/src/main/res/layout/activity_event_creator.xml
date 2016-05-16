@@ -184,7 +184,7 @@
                 android:background="#ffffff"
                 android:enabled="true"
                 android:focusable="true"
-                android:hint="Link"
+                android:hint="URL"
                 android:singleLine="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/lblWebsite"
@@ -209,11 +209,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/lblPhotoURL"
+                android:text="Photo:"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/txtWebsiteTitle" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/txtPhotoURL"
+                android:clickable="true"
+                android:background="#ffffff"
+                android:enabled="true"
+                android:focusable="true"
+                android:hint="URL"
+                android:singleLine="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/lblPhotoURL"
+                android:layout_alignParentLeft="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/lblDescription"
                 android:text="Description:"
                 android:layout_alignParentTop="false"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/txtWebsiteTitle"
+                android:layout_below="@+id/txtPhotoURL"
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentBottom="false"
                 android:layout_marginTop="5dp" />

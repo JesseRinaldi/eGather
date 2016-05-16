@@ -147,7 +147,7 @@ public class EventCreator extends AppCompatActivity implements OnClickListener {
                 .setWebsiteTitle(txtWebsiteTitle.getText().toString().trim())
                 .setBody(txtDescription.getText().toString().trim())
                 .setCategory(spCategory.getSelectedItem().toString())
-               // .setTags(txtTags.getText().toString())
+                .setTags(txtTags.getText().toString())
                 .setInviteOnly(!rbtnPublic.isChecked())
                 .setClosedInvites(!rbtnOpen.isChecked())
                 .setMod(app.user.getId());

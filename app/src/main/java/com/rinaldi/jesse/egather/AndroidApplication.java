@@ -36,7 +36,12 @@ public class AndroidApplication extends Application {
         Map<String, String> map = new HashMap<String, String>();
         map.put("name", acct.getDisplayName());
         map.put("email", acct.getEmail());
-        map.put("photoURL", acct.getPhotoUrl().toString());
+        if (acct.getPhotoUrl() == null) {
+            map.put("photoURL", "");
+        }
+        else {
+            map.put("photoURL", acct.getPhotoUrl().toString());
+        }
         mFirebaseRef.child("users").child(acct.getId()).setValue(map);
         user = acct;
     }

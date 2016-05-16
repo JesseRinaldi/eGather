@@ -4,8 +4,13 @@
     <string name="GooglePlaceAPI">AIzaSyDS73GPTQZKdVxUjINfajqoGXmntmgc-6Y</string>
     <string name="serverClientID">1026941775490-u1inidih73q5di5091n2k806ce812su4.apps.googleusercontent.com</string>
     <string name="create_event">New Event</string>
+    <string name="drawerOpen">Open</string>
+    <string name="drawerClose">Close</string>
 
-    <string-array name="ManageEventsOptions">
+    <string-array name="MenuOptions">
+        <item>My Events</item>
+        <item>Attending Events</item>
+        <item>Browse Events</item>
         <item>New Event</item>
     </string-array>
 

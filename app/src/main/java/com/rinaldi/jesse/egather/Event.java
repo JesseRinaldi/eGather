@@ -10,11 +10,10 @@ import java.util.Map;
  * Created by Jesse on 4/30/2016.
  */
 public class Event {
-    private String name, locationAddress, locationId, locationName, body, website, websiteTitle, category, photoURL, mod;
+    private String name, locationAddress, locationId, locationName, body, tags, website, websiteTitle, category, photoURL, mod="";
     private int month=-1, day=-1, year=-1, startHour=-1, startMinute=-1, endHour=-1, endMinute=-1;
     private Boolean inviteOnly, closedInvites;
     private double latitude, longitude;
-    //private String[] tags;
 
     public Event() {}
     public Event(String name) {
@@ -98,16 +97,13 @@ public class Event {
         this.websiteTitle = websiteTitle;
         return this;
     }
-/*
-    public String[] getTags() { return tags; }
+
+    public String getTags() { return tags; }
 
     public Event setTags(String tags) {
-        this.tags = tags.split(",");
-        for (int i = 0; i < this.tags.length; i++){
-            this.tags[i].trim();
-        }
+        this.tags = tags;
         return this;
-    } */
+    }
 
     public Boolean getInviteOnly() {
         return inviteOnly;
