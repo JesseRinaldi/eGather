@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private GoogleApiClient gAPI;
     private ListView lstEvents, lstMenuOptions;
+    private TextView txtMenuItem;
     private ArrayList<Event> events = new ArrayList<Event>();
     private DataSnapshot currentSnapshot;
     private AndroidApplication application;
@@ -70,9 +71,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.MenuOptions, R.layout.menu_list_item);
         lstMenuOptions = (ListView) findViewById(R.id.lstMenuOptions);
         lstMenuOptions.setAdapter(arrayAdapter);
-        listViewClickListener();
 
-        populateListView(application.mFirebaseRef.child("events"));
+        menuListClickListener();
+        eventListClickListener();
+
+        viewBrowseEvents();
     }
 
 
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_create_event:
                 Intent i = new Intent(getBaseContext(), EventCreator.class);
                 startActivity(i);
-                populateListView(application.mFirebaseRef.child("events"));
+                viewMyEvents();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -117,7 +120,55 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void listViewClickListener(){
+    private void menuListClickListener(){
+        lstMenuOptions.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> paret, View viewClicked, int position, long id) {
+                if (txtMenuItem != null) {
+                    txtMenuItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                }
+                txtMenuItem = (TextView) viewClicked;
+                txtMenuItem.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                switch (txtMenuItem.getText().toString()) {
+                    case "My Events":
+                        viewMyEvents();
+                        setTitle("My Events");
+                        drawerLayout.closeDrawers();
+                        break;
+                    case "Attending Events":
+                        //viewAttendingEvents();
+                        //
+                        drawerLayout.closeDrawers();
+                        break;
+                    case "Browse Events":
+                        viewBrowseEvents();
+                        setTitle("Select a Category");
+                        drawerLayout.closeDrawers();
+                        break;
+                    case "Logout":
+                        break;
+                    default:
+                        Log.e("Menu", "Invalid Option Selected");
+                }
+            }
+        });
+    }
+
+    private void viewMyEvents() {
+        populateEventList(application.mFirebaseRef.child("events").orderByChild("mod").equalTo(application.user.getId().toString()));
+    }
+
+    private void viewBrowseEvents() {
+        lstEvents.setAdapter(ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_list_item_1));
+        categoryListClickListener();
+    }
+
+    private void viewEventCategory(String category) {
+        populateEventList(application.mFirebaseRef.child("events").orderByChild("category").equalTo(category));
+        setTitle(category);
+    }
+
+    private void eventListClickListener(){
         lstEvents.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> paret, View viewClicked, int position, long id) {
@@ -145,8 +196,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void populateListView(Firebase mRef){
-        mRef.addValueEventListener(valueEventListener);
+    private void categoryListClickListener(){
+        lstEvents.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> paret, View viewClicked, int position, long id) {
+                TextView txtCategory = (TextView) viewClicked;
+                viewEventCategory(txtCategory.getText().toString());
+            }
+        });
+    }
+
+
+    private void populateEventList(Query qRef){
+        qRef.addValueEventListener(valueEventListener);
     }
 
     private ValueEventListener valueEventListener = new ValueEventListener() {
@@ -156,10 +218,10 @@ public class MainActivity extends AppCompatActivity {
             events.clear();
             for (DataSnapshot dsEvent : dataSnapshot.getChildren()) {
                 events.add(dsEvent.getValue(Event.class));
-                EventAdapter eventAdapter = new EventAdapter(MainActivity.this, events.toArray(new Event[events.size()]));
-                lstEvents.setAdapter(eventAdapter);
-                listViewClickListener();
             }
+            EventAdapter eventAdapter = new EventAdapter(MainActivity.this, events.toArray(new Event[events.size()]));
+            lstEvents.setAdapter(eventAdapter);
+            eventListClickListener();
         }
 
         @Override
