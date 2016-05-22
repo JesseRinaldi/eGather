@@ -28,27 +28,31 @@ import com.firebase.client.Firebase;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 
-public class EventCreator extends AppCompatActivity implements OnClickListener {
+public class EventEditor extends AppCompatActivity implements OnClickListener {
 
     private TextView txtLocation, txtDate, txtTimeStart, txtTimeEnd, activeTxt;
     private EditText txtName, txtWebsiteLink, txtWebsiteTitle, txtDescription, txtTags;
     private Spinner spCategory;
-    private RadioButton rbtnPublic, rbtnOpen;
+    private RadioButton rbtnPublic, rbtnInviteOnly, rbtnOpen, rbtnOwnerOnly;
     private Button btnCreateEvent;
     private Calendar date, startTime, endTime, activeTime;
     private int month=-1, day=-1, year=-1, startHour=-1, startMinute=-1, endHour=-1, endMinute=-1;
     private Place location;
+    private String locationName, locationID, locationAddress;
+    private double latitude, longitude;
     private int PLACE_PICKER_REQUEST = 1;
+    private AndroidApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_creator);
 
-        setTitle("New Event");
+        setTitle("Edit Event");
         bindWidgets();
 
         txtDate.setOnClickListener(this);
@@ -69,7 +73,9 @@ public class EventCreator extends AppCompatActivity implements OnClickListener {
                 R.array.categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCategory.setAdapter(adapter);
-        spCategory.setSelection(adapter.getPosition("Other"));
+
+        app = (AndroidApplication) getApplicationContext();
+        setWidgetsToActiveEvent();
     }
 
     private void bindWidgets() {
@@ -85,14 +91,65 @@ public class EventCreator extends AppCompatActivity implements OnClickListener {
         btnCreateEvent = (Button) findViewById(R.id.btnCreateEvent);
         spCategory = (Spinner) findViewById(R.id.spCategory);
         rbtnPublic = (RadioButton) findViewById(R.id.rbtnPublic);
+        rbtnInviteOnly = (RadioButton) findViewById(R.id.rbtnInviteOnly);
         rbtnOpen = (RadioButton) findViewById(R.id.rbtnOpen);
+        rbtnOwnerOnly = (RadioButton) findViewById(R.id.rbtnOwnerOnly);
+    }
+
+    private void setWidgetsToActiveEvent() {
+
+        Event event = app.activeEvent;
+        txtName.setText(event.getName());
+        txtLocation.setText(event.getLocationAddress());
+        locationID = event.getLocationId();
+        locationAddress = event.getLocationAddress();
+        locationName = event.getLocationName();
+        latitude = event.getLatitude();
+        longitude = event.getLongitude();
+        txtWebsiteLink.setText(event.getWebsite());
+        txtWebsiteTitle.setText(event.getWebsiteTitle());
+        txtDescription.setText(event.getBody());
+        txtTags.setText(event.getTags());
+
+        ArrayAdapter<CharSequence> categories = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
+        spCategory.setSelection(categories.getPosition(event.getCategory()));
+
+        if (event.getInviteOnly()) {
+            rbtnPublic.setChecked(false);
+            rbtnInviteOnly.setChecked(true);
+        }
+        if (event.getClosedInvites()) {
+            rbtnOpen.setChecked(false);
+            rbtnOwnerOnly.setChecked(true);
+        }
+
+        month = event.getMonth();
+        day = event.getDay();
+        year = event.getYear();
+        txtDate.setText(month + " / " + day + " / " + year);
+        date.set(year, month-1, day);
+        startHour = event.getStartHour();
+        startMinute = event.getStartMinute();
+        endHour = event.getEndHour();
+        endMinute = event.getEndMinute();
+        if (startHour != -1) {
+            startTime.set(Calendar.HOUR, startHour);
+            startTime.set(Calendar.MINUTE, startMinute);
+            txtTimeStart.setText((startHour % 12 == 0 ? 12 : startHour % 12) + ":" + (startMinute < 10 ? "0" + startMinute : startMinute) + (startHour >= 12 ? " PM" : " AM"));
+        }
+        if (endHour != -1) {
+            endTime.set(Calendar.HOUR, endHour);
+            endTime.set(Calendar.MINUTE, endMinute);
+            txtTimeEnd.setText((endHour % 12 == 0 ? 12 : endHour % 12) + ":" + (endMinute < 10 ? "0" + endMinute : endMinute) + (endHour >= 12 ? " PM" : " AM"));
+        }
+        btnCreateEvent.setText("Edit Event");
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btnCreateEvent:
-                createEvent();
+                editEvent();
                 break;
             case R.id.txtLocation:
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
@@ -132,15 +189,26 @@ public class EventCreator extends AppCompatActivity implements OnClickListener {
         }
     };
 
-    protected void createEvent() {
+    protected void editEvent() {
         if (txtName.getText().toString().trim().length() == 0) {
             Toast.makeText(this, "Error: Name Required", Toast.LENGTH_LONG);
             return;
         }
 
-        AndroidApplication app = (AndroidApplication) getApplicationContext();
-        Event event = new Event(txtName.getText().toString())
-                .setLocation(location)
+        if (location != null) {
+            locationAddress = location.getAddress().toString();
+            locationID = location.getId().toString();
+            locationName = location.getName().toString();
+            latitude = location.getLatLng().latitude;
+            longitude = location.getLatLng().longitude;
+        }
+
+        app.activeEvent.setName(txtName.getText().toString())
+                .setLocationId(locationID)
+                .setLocationAddress(locationAddress)
+                .setLocationName(locationName)
+                .setLatitude(latitude)
+                .setLongitude(longitude)
                 .setDate(month, day, year)
                 .setTime(startHour, startMinute, endHour, endMinute)
                 .setWebsite(txtWebsiteLink.getText().toString().trim())
@@ -151,12 +219,10 @@ public class EventCreator extends AppCompatActivity implements OnClickListener {
                 .setInviteOnly(!rbtnPublic.isChecked())
                 .setClosedInvites(!rbtnOpen.isChecked())
                 .setMod(app.user.getId());
-        Firebase newRef = app.mFirebaseRef.child("events").push();
-        newRef.setValue(event);
-        app.activeEvent = event;
-        Intent i = new Intent(this, EventView.class);
-        finish();  //Kill the activity from which you will go to next activity
-        startActivity(i);
+        Firebase newRef = app.mFirebaseRef.child("events").child(app.activeEventID);
+        newRef.setValue(app.activeEvent);
+        finish();
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

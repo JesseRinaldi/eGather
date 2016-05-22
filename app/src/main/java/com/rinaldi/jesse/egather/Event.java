@@ -13,7 +13,7 @@ public class Event {
     private String name, locationAddress, locationId, locationName, body, tags, website, websiteTitle, category, photoURL, mod="";
     private int month=-1, day=-1, year=-1, startHour=-1, startMinute=-1, endHour=-1, endMinute=-1;
     private Boolean inviteOnly, closedInvites;
-    private double latitude, longitude;
+    private double latitude, longitude, dateTimeSort = -1;
 
     public Event() {}
     public Event(String name) {
@@ -34,6 +34,27 @@ public class Event {
     public String getLocationName() { return locationName; }
     public double getLatitude() { return latitude; }
     public double getLongitude() { return longitude; }
+
+    public Event setLocationAddress(String locationAddress) {
+        this.locationAddress = locationAddress;
+        return this;
+    }
+    public Event setLocationId(String locationId) {
+        this.locationId = locationId;
+        return this;
+    }
+    public Event setLocationName(String locationName) {
+        this.locationName = locationName;
+        return this;
+    }
+    public Event setLatitude(double latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+    public Event setLongitude(double longitude) {
+        this.longitude = longitude;
+        return this;
+    }
 
     public Event setLocation(Place location) {
         this.locationAddress = location.getAddress().toString();
@@ -139,6 +160,7 @@ public class Event {
         this.month = month;
         this.day = day;
         this.year = year;
+        setDateTimeSort();
         return this;
     }
 
@@ -163,7 +185,22 @@ public class Event {
         this.startMinute = startMinute;
         this.endHour = endHour;
         this.endMinute = endMinute;
+        setDateTimeSort();
         return this;
+    }
+
+    public double getDateTimeSort() { return dateTimeSort;}
+
+    private void setDateTimeSort() {
+        double sh = (startHour == -1 ? 0 : startHour);
+        double sm = (startMinute == -1 ? 0 : startMinute);
+        double m = (month == -1 ? 0 : month);
+        double d = (day == -1 ? 0 : day);
+        double y = (year == -1 ? 0 : year);
+        dateTimeSort = y*100000000 + m*1000000 + d*10000 + sh*100 + sm;
+        //If startTime wasn't set, decrement by .1 so events that start at
+        //midnight have a larger value
+        if (startHour == -1) dateTimeSort -= .1;
     }
 }
 

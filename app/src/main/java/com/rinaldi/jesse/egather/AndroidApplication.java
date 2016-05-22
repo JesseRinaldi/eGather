@@ -23,6 +23,7 @@ public class AndroidApplication extends Application {
     Firebase.AuthResultHandler authResultHandler;
     public GoogleSignInAccount user;
     public Event activeEvent;
+    public String activeEventID;
 
     @Override
     public void onCreate(){

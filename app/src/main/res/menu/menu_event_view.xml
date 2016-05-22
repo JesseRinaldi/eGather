@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.rinaldi.jesse.egather.EventView">
+    <item
+        android:id="@+id/action_edit_event"
+        android:orderInCategory="10"
+        android:title="Edit Event"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_invite"
+        android:orderInCategory="20"
+        android:title="Invite"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_ignore_invitation"
+        android:orderInCategory="30"
+        android:title="Ignore Invitation"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete_event"
+        android:orderInCategory="50"
+        android:title="Delete Event"
+        app:showAsAction="never" />
+</menu>

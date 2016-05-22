@@ -112,12 +112,22 @@
                 android:layout_below="@+id/txtCategoryView"
                 android:layout_marginTop="5dp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/txtInvitedByView"
+                android:text="Invited By:"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/txtCreatedByView"
+                android:layout_marginTop="5dp" />
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Attend Event"
                 android:id="@+id/btnAttendEvent"
-                android:layout_below="@+id/txtCreatedByView" />
+                android:layout_below="@+id/txtInvitedByView" />
 
         </RelativeLayout>
 

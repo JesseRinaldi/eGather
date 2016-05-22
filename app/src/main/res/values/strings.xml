@@ -17,7 +17,7 @@
     <string-array name="categories">
         <item>Music</item>
         <item>Comedy</item>
-        <item>Sport</item>
+        <item>Sports</item>
         <item>Nightlife</item>
         <item>Party</item>
         <item>Entertainment</item>
@@ -25,6 +25,15 @@
         <item>Convention</item>
         <item>Festival</item>
         <item>Other</item>
+    </string-array>
+
+    <string-array name="radiusValues">
+        <item>5 Miles</item>
+        <item>10 Miles</item>
+        <item>25 Miles</item>
+        <item>50 Miles</item>
+        <item>100 Miles</item>
+        <item>------</item>
     </string-array>
 
 </resources>
