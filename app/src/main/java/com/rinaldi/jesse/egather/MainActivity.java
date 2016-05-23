@@ -33,14 +33,23 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 
+/**
+ * NAME
+ *      MainActivity
+ * DESCRIPTION
+ *      The Main Activity. The first activity to be opened by the application.
+ *      Inherits from AppCombatActivity (activity with menu bar).
+ *      It revolves around switching the "view" state of the ListView lstEvents.
+ * AUTHOR
+ *      @author Jesse Rinaldi
+ */
 public class MainActivity extends AppCompatActivity {
-    private GoogleApiClient gAPI;
+
     private ListView lstEvents, lstMenuOptions;
     private TextView txtMenuItem, txtNoEvents;
     private Spinner spCategoryFilter, spRadiusFilter;
     private LinearLayout filterLayout;
     private ArrayList<Event> events = new ArrayList<Event>();
-    private DataSnapshot currentSnapshot;
     private AndroidApplication application;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -51,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
     private listStates currentView = listStates.BROWSE_EVENTS;
     private String currentCategory = "";
 
+    /**
+     * NAME
+     *      MainActivity.onCreate
+     * SYNOPSIS
+     *      @param savedInstanceState - Used by Android to restore Activity to previous state
+     * DESCRIPTION
+     *      Ran when MainActivity is created. Binds views from XML file and populates ListViews and Spinners.
+     *      If no user is found, the signin activity is ran immediately
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         application = (AndroidApplication) getApplicationContext();
-        gAPI = application.gAPI;
 
         lstEvents = (ListView) findViewById(R.id.lstEvents);
         txtNoEvents = (TextView) findViewById(R.id.txtNoEvents);
@@ -99,12 +118,32 @@ public class MainActivity extends AppCompatActivity {
         invalidateView();
     }
 
+    /**
+     * NAME
+     *      MainActivity.onResume
+     * DESCRIPTION
+     *      Ran when MainActivity resumes itself from the app being reopened or
+     *      another activity finishing. Resets lstEvents to its current view.
+     * AUTHOR
+     *      Jesse Rinaldi
+     */
     @Override
     public void onResume() {
         super.onResume();  // Always call the superclass method first
         invalidateView();
     }
 
+    /**
+     * NAME
+     *      MainActivity.setUpMenuBar
+     * SYNOPSIS
+     *      Sets up the sliding menu drawer and action bar
+     * DESCRIPTION
+     *      Binds the drawer layout, sets its toggle button in the action bar, and
+     *      populates the listview in the drawer layout
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     public void setUpMenuBar() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.drawerOpen, R.string.drawerClose) {
@@ -130,7 +169,20 @@ public class MainActivity extends AppCompatActivity {
         menuListClickListener();
     }
 
-
+    /**
+     * NAME
+     *       MainActivity.onCreateOptionsMenu
+     * SYNOPSIS
+     *      @param menu - The menu used by the action bar
+     * DESCRIPTION
+     *      Called by Android to inflate the Android menu with its options. Only option
+     *      is the Add Event button which is only visible when in view MY_EVENTS
+     *      Note - Can be called with invalidateOptionsMenu()
+     * RETURNS
+     *     @return boolean always true
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -139,11 +191,21 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * NAME
+     *      MainActivity.onOptionsItemSelected
+     * SYNOPSIS
+     *      @param item - The item clicked from the Action Bar Menu
+     * DESCRIPTION
+     *      Handles the click events for the only 2 things in the Action Bar,
+     *      the drawer layout toggle and create event button
+     * RETURNS
+     *      @return boolean true if valid item clicked
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) return true;
         if (item.getItemId() == R.id.action_create_event) {
             Intent i = new Intent(getBaseContext(), EventCreator.class);
@@ -154,20 +216,47 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * NAME
+     *      MainActivity.onPostCreate
+     * SYNOPSIS
+     *      @param savedInstanceState - Used by Android to restore Activity to previous state
+     * DESCRIPTION
+     *      Needed for drawer layout toggle button functionality
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         actionBarDrawerToggle.syncState();
     }
 
+    /**
+     * NAME
+     *      MainActivity.onConfigurationChanged
+     * SYNOPSIS
+     *      @param newConfig
+     * DESCRIPTION
+     *      Needed for drawer layout toggle button functionality
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // This method should always be called by your Activity's
-        // onConfigurationChanged method.
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * NAME
+     *      MainActivity.menuListClickListener
+     * DESCRIPTION
+     *      Sets the on item click listener for lstMenuOptions in the sliding menu drawer
+     *      Each item sets the currentView enum and repops the listview of events
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void menuListClickListener(){
         lstMenuOptions.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -191,6 +280,10 @@ public class MainActivity extends AppCompatActivity {
                         invalidateView();
                         break;
                     case "Logout":
+                        txtMenuItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                        Intent intent = new Intent(MainActivity.this, signin.class);
+                        intent.putExtra("PERFORM_LOGOUT", true);
+                        startActivity(intent);
                         break;
                     default:
                         if (txtMenuItem.getText().toString().startsWith("Invites")) {
@@ -205,6 +298,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * NAME
+     *      MainActivity.invalidateView
+     * DESCRIPTION
+     *      Based on the currentView enum, changes MainActivity to reflect the current view
+     *      Certain properties are changed in each like the ability to see InviteOnly events,
+     *      and also whether certain filters will be applied to the event listview
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void invalidateView() {
         switch(currentView) {
             case MY_EVENTS:
@@ -219,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
             case BROWSE_EVENTS:
                 setTitle("Browse Events");
                 showAddButton = false;
+                showInviteOnly = false;
                 filterLayout.setVisibility(View.VISIBLE);
                 currentCategory = (spCategoryFilter.getSelectedItem().toString().equals("All") ? "" : spCategoryFilter.getSelectedItem().toString());
                 searchRadius = (spRadiusFilter.getSelectedItem().toString().equals("------") ? -1 : Double.parseDouble(spRadiusFilter.getSelectedItem().toString().split(" ")[0]));
@@ -234,6 +338,13 @@ public class MainActivity extends AppCompatActivity {
                 viewAttendingEvents();
                 break;
             case INVITES:
+                showInviteOnly = true;
+                currentCategory = "";
+                searchRadius = -1;
+                setTitle("Invites");
+                showAddButton = false;
+                filterLayout.setVisibility(View.GONE);
+                viewInvites();
                 break;
             default:
                 Log.e("INVALID VIEW", "State of 'currentView' not recognized");
@@ -242,6 +353,16 @@ public class MainActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
+    /**
+     * NAME
+     *      MainActivity.eventListClickListener
+     * DESCRIPTION
+     *      Sets the click listener for lstEvents. When an event item is clicked,
+     *      the event is retrieved from firebase, then it and its ID is stored in
+     *      AndroidApplication and it is opened in the EventView activity
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void eventListClickListener(){
         lstEvents.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -258,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
                             application.activeEventID = dsEvent.getKey();
                             Intent intent = new Intent(MainActivity.this, EventView.class);
                             startActivity(intent);
-
+                            return;
                         } //else onCancelled(null);
                     }
 
@@ -271,33 +392,108 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * NAME
+     *      MainActivity.populateEventList
+     * SYNOPSIS
+     *      @param qRef - A Firebase query for events to be put in lstEvents
+     * DESCRIPTION
+     *      Sets a listener to retrieve events from the qRef query
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void populateEventList(Query qRef){
         qRef.addValueEventListener(valueEventListener);
     }
 
+    /**
+     * NAME
+     *      MainActivity.valueEventListener
+     * DESCRIPTION
+     *      A ValueEventListener object which stores events retrieved from
+     *      Firebase in an Arraylist of events
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            currentSnapshot = dataSnapshot;
             events.clear();
             for (DataSnapshot dsEvent : dataSnapshot.getChildren()) {
                 events.add(dsEvent.getValue(Event.class));
             }
             setEventList();
         }
-
         @Override
         public void onCancelled(FirebaseError firebaseError) {
 
         }
     };
 
+    /**
+     * NAME
+     *      MainActivity.viewAttendingEvents
+     * DESCRIPTION
+     *      Sets MainActivity to the ATTENDING_EVENTS view. Retrieves
+     *      the IDs for each event a user is attending from Firebase
+     *      and reconciles each ID to a Firebase Event
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void viewAttendingEvents() {
         events.clear();
         final ArrayList<String> eventIDs = new ArrayList<String>();
         final Calendar now = Calendar.getInstance();
         final double currentDateTimeSort = (double)now.get(Calendar.YEAR)*100000000 + (double)(now.get(Calendar.MONTH)+1)*1000000 + (double)now.get(Calendar.DAY_OF_MONTH)*10000 - 1;
         application.mFirebaseRef.child("attendance").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(application.user.getId())) {
+                    //Get each attending event ID
+                    for (DataSnapshot dsEvent : dataSnapshot.child(application.user.getId()).getChildren()) {
+                        eventIDs.add(dsEvent.getKey());
+                    }
+                    application.mFirebaseRef.child("events").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (String eventID : eventIDs) {
+                                //Pair each ID with its corresponding event object
+                                if (dataSnapshot.hasChild(eventID)) {
+                                    events.add(dataSnapshot.child(eventID).getValue(Event.class));
+                                }
+                            }
+                            setEventList();
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) { setEventList(); }
+                    });
+                }
+                else {
+                    setEventList();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {}
+        });
+    }
+
+    /**
+     * NAME
+     *      MainActivity.viewInvites
+     * DESCRIPTION
+     *      Sets MainActivity to INVITES view. Very similar to viewAttendingEvents
+     *      except it gets the Event IDs from the servers "invites" child
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
+    private void viewInvites() {
+        events.clear();
+        final ArrayList<String> eventIDs = new ArrayList<String>();
+        final Calendar now = Calendar.getInstance();
+        final double currentDateTimeSort = (double)now.get(Calendar.YEAR)*100000000 + (double)(now.get(Calendar.MONTH)+1)*1000000 + (double)now.get(Calendar.DAY_OF_MONTH)*10000 - 1;
+        application.mFirebaseRef.child("invites").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(application.user.getId())) {
@@ -330,7 +526,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * NAME
+     *      MainActivity.setEventList
+     * DESCRIPTION
+     *      Sets the contents of the ArrayList events to lstEvents. Beforehand though,
+     *      it removes some events which don't fulfill certain criteria set before.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void setEventList() {
         Collections.sort(events, new Comparator<Event>(){
             public int compare(Event e1, Event e2) {
@@ -342,21 +546,25 @@ public class MainActivity extends AppCompatActivity {
         double currentDateTimeSort = (double)now.get(Calendar.YEAR)*100000000 + (double)(now.get(Calendar.MONTH)+1)*1000000 + (double)now.get(Calendar.DAY_OF_MONTH)*10000 - 1;
         for (int i = events.size() - 1; i >= 0; i--) {
             Event e = events.get(i);
+            //Remove outdated events if needed
             if (currentView != listStates.MY_EVENTS && Double.compare(e.getDateTimeSort(), currentDateTimeSort) < 0) {
                 Log.d("REMOVE OUTDATED", e.getName());
                 events.remove(i);
                 continue;
             }
+            //Remove inviteOnly events if needed
             if (!showInviteOnly && e.getInviteOnly()) {
                 Log.d("REMOVE INVITE ONLY", e.getName());
                 events.remove(i);
                 continue;
             }
+            //Remove events filtered out of category if needed
             if (!currentCategory.equals("") && !e.getCategory().equals(currentCategory)) {
                 Log.d("REMOVE CATEGORY", e.getName());
                 events.remove(i);
                 continue;
             }
+            //Remove events outside of search radius if needed
             if (searchRadius != -1) {
                 String provider;
                 LocationManager lm = (LocationManager) MainActivity.this.getSystemService(Context.LOCATION_SERVICE);

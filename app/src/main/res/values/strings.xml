@@ -10,6 +10,7 @@
     <string-array name="MenuOptions">
         <item>My Events</item>
         <item>Attending Events</item>
+        <item>Invites</item>
         <item>Browse Events</item>
         <item>Logout</item>
     </string-array>
@@ -35,5 +36,6 @@
         <item>100 Miles</item>
         <item>------</item>
     </string-array>
+    <string name="title_activity_event_invite">Invite Users</string>
 
 </resources>

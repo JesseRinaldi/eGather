@@ -16,6 +16,8 @@ import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import android.support.v7.app.AppCompatActivity;
 
@@ -34,8 +36,14 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin);
         btnSignIn = (SignInButton) findViewById(R.id.btnSignIn);
-        btnSignIn.setOnClickListener(this);
         getSupportActionBar().hide();
+
+        application = (AndroidApplication) getApplicationContext();
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("PERFORM_LOGOUT")) {
+            googleSignOut();
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestServerAuthCode(getString(R.string.serverClientID))
@@ -43,19 +51,15 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
                 .requestProfile()
                 .build();
 
-        application = (AndroidApplication) getApplicationContext();
-        application.gAPI = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        application.buildGAPI(signin.this, gso);
 
+        btnSignIn.setOnClickListener(this);
     }
 
 
     @Override
     public void onConnected(Bundle bundle) {
-        Toast.makeText(this, "User Connected!", Toast.LENGTH_LONG).show();
+        Log.d("CONNECTED", "GoogleSignIn");
     }
 
     @Override
@@ -106,5 +110,35 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
             Toast.makeText(this, "Connection Failed!", Toast.LENGTH_LONG).show();
             return;
         }
+    }
+
+    private void googleSignOut() {
+        if (application.gAPI.isConnected()) {
+            application.user = null;
+            Auth.GoogleSignInApi.revokeAccess(application.gAPI).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            if (status.isSuccess()){
+                                Log.d("REVOKE ACCESS", "Successful");
+                            }
+                        }
+                    });
+            Auth.GoogleSignInApi.signOut(application.gAPI);
+            application.user = null;
+        }
+        else {
+            Log.e("CONNECTION ERROR", "GoogleSignIn wasn't connected");
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (application.gAPI != null) application.gAPI.connect();
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

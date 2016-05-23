@@ -1,6 +1,8 @@
 package com.rinaldi.jesse.egather;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
@@ -8,14 +10,16 @@ import android.widget.Toast;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AndroidApplication extends Application {
+public class AndroidApplication extends Application  {
     public static final String FIREBASE_URL = "https://egather.firebaseio.com/";
     public GoogleApiClient gAPI;
     public static final int RC_SIGN_IN = 0;
@@ -31,6 +35,13 @@ public class AndroidApplication extends Application {
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase(FIREBASE_URL);
 
+    }
+
+    public void buildGAPI(signin msignin, GoogleSignInOptions gso) {
+        gAPI = new GoogleApiClient.Builder(msignin)
+                .addConnectionCallbacks(msignin)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     public void authUser(GoogleSignInAccount acct) {

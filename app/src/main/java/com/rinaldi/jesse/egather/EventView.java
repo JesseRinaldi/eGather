@@ -122,7 +122,7 @@ public class EventView extends AppCompatActivity {
             });
         }
 
-        txtInvitedBy.setVisibility(View.GONE);
+        txtInvitedBy.setVisibility(invited ? View.VISIBLE : View.GONE);
 
         String photoURL = event.getPhotoURL();
         if(photoURL != null && !photoURL.isEmpty() && URLUtil.isValidUrl(photoURL)) {
@@ -195,6 +195,13 @@ public class EventView extends AppCompatActivity {
                     if (dataSnapshot.child(app.user.getId()).hasChild(app.activeEventID)) {
                         invited = true;
                         setInvitedBy((String) dataSnapshot.child(app.user.getId()).child(app.activeEventID).getValue());
+                        invalidateOptionsMenu();
+                    }
+                    else {
+                        invited = false;
+                        txtInvitedBy.setVisibility(View.GONE);
+                        txtInvitedBy.setText("Invited By: ");
+                        invalidateOptionsMenu();
                     }
                 }
             }
@@ -256,12 +263,19 @@ public class EventView extends AppCompatActivity {
 
         switch(id) {
             case R.id.action_edit_event:
-                Intent intent = new Intent(this, EventEditor.class);
-                startActivity(intent);
+                startActivity(new Intent(this, EventEditor.class));
                 return true;
             case R.id.action_invite:
+                startActivity(new Intent(this, EventInvite.class));
                 return true;
             case R.id.action_ignore_invitation:
+                if (attending == true) btnAttendEvent.callOnClick();
+                app.mFirebaseRef.child("invites").child(app.user.getId()).child(app.activeEventID).removeValue(new Firebase.CompletionListener() {
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                        setInvited();
+                    }
+                });
                 return true;
             case R.id.action_delete_event:
                 app.mFirebaseRef.child("events").child(app.activeEventID).removeValue();

@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by Jesse on 5/15/2016.
  */
-class EventAdapter extends ArrayAdapter<Event> {
+public class EventAdapter extends ArrayAdapter<Event> {
 
     private TextView txtNameList, txtDateList;
     ImageView ivPhotoList;
