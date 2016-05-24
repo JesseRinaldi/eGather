@@ -17,17 +17,54 @@ import com.squareup.picasso.Picasso;
 import java.util.Map;
 
 /**
- * Created by Jesse on 5/22/2016.
+ * NAME
+ *      UserAdapter
+ * DESCRIPTION
+ *      Adapter to reconcile user data into user_list_item.xml views
+ *      Inherits from ArrayAdapter
+ * AUTHOR
+ *      @author Jesse Rinaldi
+ * DATE
+ *      5/22/2016
  */
 public class UserAdapter extends ArrayAdapter<Map<String, String>> {
 
     private TextView txtUserID, txtDisplayName, txtGMail;
     ImageView ivUserPhoto;
 
+    /**
+     * NAME
+     *      UserAdapter (Constructor)
+     * SYNOPSIS
+     *      @param context - Current activity context
+     *      @param users - Array of Maps for user data
+     * DESCRIPTION
+     *      Constructor for UserAdapter
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     * DATE
+     *      5/22/2016
+     */
     public UserAdapter(Context context, Map<String, String>[] users) {
         super(context, R.layout.user_list_item, users);
     }
 
+    /**
+     * NAME
+     *      UserAdapter.getView
+     * SYNOPSIS
+     *      @param position - position in users array
+     *      @param convertView
+     *      @param parent
+     * DESCRIPTION
+     *      Reconciles Maps of user data into views. Uses a user's name, email, and photo
+     * RETURNS
+     *      @return view - the view created from user data
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     * DATE
+     *      5/22/2016
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());

@@ -19,6 +19,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * NAME
+ *      AndroidApplication
+ * DESCRIPTION
+ *      Class which represents this entire application. Inherits from Application.
+ *      Mainly used for global variables which must be used across the app.
+ * AUTHOR
+ *      @author Jesse Rinaldi
+ * DATE
+ *      3/10/2016
+ */
 public class AndroidApplication extends Application  {
     public static final String FIREBASE_URL = "https://egather.firebaseio.com/";
     public GoogleApiClient gAPI;
@@ -29,6 +40,15 @@ public class AndroidApplication extends Application  {
     public Event activeEvent;
     public String activeEventID;
 
+    /**
+     * NAME
+     *      AndroidApplication.onCreate
+     * DESCRIPTION
+     *      On Create event for the application. Executed when the app is first opened.
+     *      Sets the connection to Firebase.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onCreate(){
         super.onCreate();
@@ -37,6 +57,18 @@ public class AndroidApplication extends Application  {
 
     }
 
+    /**
+     * NAME
+     *      AndroidApplication.buildGAPI
+     * SYNOPSIS
+     *      @param msignin - The signin activity instance connecting
+     *      @param gso - The options for our GoogleSignIn
+     * DESCRIPTION
+     *      This is used to create the GoogleSignIn instance and store
+     *      it globally.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     public void buildGAPI(signin msignin, GoogleSignInOptions gso) {
         gAPI = new GoogleApiClient.Builder(msignin)
                 .addConnectionCallbacks(msignin)
@@ -44,6 +76,16 @@ public class AndroidApplication extends Application  {
                 .build();
     }
 
+    /**
+     * NAME
+     *      AndroidApplication.authUser
+     * SYNOPSIS
+     *      @param acct - The Google user account that was signed in
+     * DESCRIPTION
+     *      Stores the user's account globally and sends the user info to Firebase.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     public void authUser(GoogleSignInAccount acct) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("name", acct.getDisplayName());

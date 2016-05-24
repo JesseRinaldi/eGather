@@ -31,9 +31,32 @@ import java.util.*;
 import java.lang.*;
 import java.io.*;
 
+
+/**
+ * NAME
+ *      DistanceCalculator
+ * DESCRIPTION
+ *      This is used by MainActivity.class to find the distance between two lat lng points
+ * AUTHOR
+ *      @author http://www.geodatasource.com
+ */
 public class DistanceCalculator
 {
 
+    /**
+     * NAME
+     *      DistanceCalculator.distance
+     * SYNOPSIS
+     *      @param lat1 - first latitude
+     *      @param lon1 - first longitude
+     *      @param lat2 - second latitude
+     *      @param lon2 - second longitude
+     *      @param unit - Unit of measurement: "M", "K", or "N", MainActivity uses "M"
+     * DESCRIPTION
+     *      This static method finds the distance between two lat lon coordinates
+     * AUTHOR
+     *      @author http://www.geodatasource.com
+     */
     public static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));

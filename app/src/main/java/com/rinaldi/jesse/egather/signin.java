@@ -24,13 +24,34 @@ import android.support.v7.app.AppCompatActivity;
 import java.io.IOException;
 
 /**
- * Created by Jesse on 3/16/2016.
+ * NAME
+ *      signin
+ * DESCRIPTION
+ *      Activity to handle user signing in and out of their Google account.
+ *      Inherits from AppCompatActivity
+ * AUTHOR
+ *      @author Jesse Rinaldi
+ * DATE
+ *      3/16/2016
  */
 public class signin extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
 
     private SignInButton btnSignIn;
     private AndroidApplication application;
 
+    /**
+     * NAME
+     *      signin.onCreate
+     * SYNOPSIS
+     *      @param savedInstanceState - used by system
+     * DESCRIPTION
+     *      On Create event for signin activity. If the intent used to open
+     *      this activity use has the extra PERFORM_LOGOUT, sign out of Google account.
+     *      (The activity will have that extra if the signin activity was opened from
+     *      the user clicking MainActivity's Logout button)
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,16 +78,46 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
     }
 
 
+    /**
+     * NAME
+     *      signin.onConnected
+     * SYNOPSIS
+     *      @param bundle - unused
+     * DESCRIPTION
+     *      On Connected to GoogleSignIn event
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onConnected(Bundle bundle) {
         Log.d("CONNECTED", "GoogleSignIn");
     }
 
+    /**
+     * NAME
+     *      signin.onConnectionSuspended
+     * SYNOPSIS
+     *      @param i - unused
+     * DESCRIPTION
+     *      On Connection Suspended event for GoogleSignIn api. Just reconnect.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onConnectionSuspended(int i) {
         application.gAPI.connect();
     }
 
+    /**
+     * NAME
+     *      signin.onClick
+     * SYNOPSIS
+     *      @param v - the view that was clicked
+     * DESCRIPTION
+     *      On Click event. If the sign in button was clicked, connect with GoogleSignInAPI
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnSignIn) {
@@ -74,15 +125,34 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         }
     }
 
+    /**
+     * NAME
+     *      signin.signInWithGoogle
+     * DESCRIPTION
+     *      Start the process of signing a user in through their Google account
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void signInWithGoogle() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(application.gAPI);
         startActivityForResult(signInIntent, AndroidApplication.RC_SIGN_IN);
     }
 
+    /**
+     * NAME
+     *      signin.onActivityResult
+     * SYNOPSIS
+     *      @param requestCode
+     *      @param resultCode
+     *      @param data
+     * DESCRIPTION
+     *      On Activity Result event upon return from the GoogleSignIn dialog.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == AndroidApplication.RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -90,6 +160,16 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         }
     }
 
+    /**
+     * NAME
+     *      signin.handleSignInResult
+     * SYNOPSIS
+     *      @param result - Result from the GoogleSignIn dialog
+     * DESCRIPTION
+     *      Handles the result. Authenticates the user upon success and stores the information.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void handleSignInResult(GoogleSignInResult result) {
         //Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -104,6 +184,16 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         }
     }
 
+    /**
+     * NAME
+     *      signin.onConnectionFailed
+     * SYNOPSIS
+     *      @param connectionResult
+     * DESCRIPTION
+     *      Connection Failed event for the GoogleSignIn API
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         if(!connectionResult.hasResolution()) {
@@ -112,6 +202,16 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         }
     }
 
+    /**
+     * NAME
+     *      signin.googleSignOut
+     * DESCRIPTION
+     *      Signs the user out of their Google account and deleted the user data
+     *      so that the user will have to choose another account upon clicking
+     *      the sign in button.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void googleSignOut() {
         if (application.gAPI.isConnected()) {
             application.user = null;
@@ -132,12 +232,30 @@ public class signin extends AppCompatActivity implements GoogleApiClient.Connect
         }
     }
 
+    /**
+     * NAME
+     *      signin.onStart
+     * DESCRIPTION
+     *      On Start event. Reconnects to GoogleSignIn.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     protected void onStart() {
         super.onStart();
         if (application.gAPI != null) application.gAPI.connect();
     }
 
+    /**
+     * NAME
+     *      signin.onBackPressed
+     * DESCRIPTION
+     *      On Back Pressed event for activity. Because super.OnBackPressed() is not called,
+     *      the back button is disabled. This prevents the user from going back to MainActivity
+     *      without signing in.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onBackPressed() {
     }

@@ -20,6 +20,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * NAME
+ *      EventInvite
+ * DESCRIPTION
+ *      EventInvite Activity. Uses activity_event_invite.xml. Inherits from AppCompatActivity.
+ *      Users can invite users to an event from this activity.
+ * AUTHOR
+ *      @author Jesse Rinaldi
+ * DATE
+ *      5/23/2016
+ */
 public class EventInvite extends AppCompatActivity {
 
     private ListView lstUsers;
@@ -27,6 +38,16 @@ public class EventInvite extends AppCompatActivity {
     private AndroidApplication app;
     private ArrayList<Map<String, String>> users;
 
+    /**
+     * NAME
+     *      EventInvite.onCreate
+     * SYNOPSIS
+     *      @param savedInstanceState - used by system
+     * DESCRIPTION
+     *      On Create event for EventInvite activity. Sets up the widgets on the page.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +61,15 @@ public class EventInvite extends AppCompatActivity {
         setSVListener();
      }
 
+    /**
+     * NAME
+     *      signin.setLstListener
+     * DESCRIPTION
+     *      On Item Click event for the listView of users. The user is displayed a yes/no dialog
+     *      to invite the user they selected.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void setLstListener() {
         lstUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,6 +95,16 @@ public class EventInvite extends AppCompatActivity {
         });
     }
 
+    /**
+     * NAME
+     *      signin.setSVListener
+     * DESCRIPTION
+     *      On Query Text Listener for the searchview. Searches for users
+     *      which have the searchview contents in their name or email from Firebase
+     *      and puts them in the listView. User data is stored in Maps.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void setSVListener() {
         svUsers.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -108,6 +148,15 @@ public class EventInvite extends AppCompatActivity {
         });
     }
 
+    /**
+     * NAME
+     *      signin.populateUserList
+     * DESCRIPTION
+     *      Populates the listView of users with a UserAdapter from the users
+     *      found from the search query.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void populateUserList() {
         UserAdapter userAdapter = new UserAdapter(this, users.toArray((Map<String, String>[]) new Map[users.size()]));
         lstUsers.setAdapter(userAdapter);

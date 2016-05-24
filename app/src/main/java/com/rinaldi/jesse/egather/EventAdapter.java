@@ -13,17 +13,54 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Jesse on 5/15/2016.
+ * NAME
+ *      EventAdapter
+ * DESCRIPTION
+ *      Takes an array of lists and adapts them into an adapter
+ *      of event_list_item views. Inherits from ArrayAdapter
+ * AUTHOR
+ *      @author Jesse Rinaldi
+ * DATE
+ *      5/15/2016
  */
 public class EventAdapter extends ArrayAdapter<Event> {
 
     private TextView txtNameList, txtDateList;
     ImageView ivPhotoList;
 
+    /**
+     * NAME
+     *      EventAdapter (COnstructor)
+     * SYNOPSIS
+     *      @param context - Current activity context
+     *      @param events - Array of event objects
+     * DESCRIPTION
+     *      Constructs the EventAdapter
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     * DATE
+     *      5/15/2016
+     */
     public EventAdapter(Context context, Event[] events) {
         super(context, R.layout.event_list_item, events);
     }
 
+    /**
+     * NAME
+     *      EventAdapter.getView
+     * SYNOPSIS
+     *      @param position - Position in events array
+     *      @param convertView
+     *      @param parent
+     * DESCRIPTION
+     *      Called automatically by system. Sets the widgets for event name, date, and photo
+     * RETURNS
+     *      @return View - the view created
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     * DATE
+     *      5/15/2016
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
