@@ -31,7 +31,18 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
-
+/**
+ * NAME
+ *      EventEditor
+ * DESCRIPTION
+ *      Activity used to edit an event after it is created. Inherits from AppCompatActivity.
+ *      Largely similar to EventCreator.class except edits an event stored in Firebase
+ *      instead of creates a new one. Even uses the same XML layout, activity_event_creator.xml
+ * AUTHOR
+ *      @author Jesse Rinaldi
+ * DATE
+ *      5/10/2016
+ */
 public class EventEditor extends AppCompatActivity implements OnClickListener {
 
     private TextView txtLocation, txtDate, txtTimeStart, txtTimeEnd, activeTxt;
@@ -47,6 +58,17 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
     private int PLACE_PICKER_REQUEST = 1;
     private AndroidApplication app;
 
+    /**
+     * NAME
+     *      EventEditor.onCreate
+     * SYNOPSIS
+     *      @param savedInstanceState - Used by Android to restore Activity to previous state
+     * DESCRIPTION
+     *      On create event for EventEditor activity. Handles the initial setup of widgets like
+     *      setting listeners and populating the category spinner.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +100,14 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         setWidgetsToActiveEvent();
     }
 
+    /**
+     * NAME
+     *      EventEditor.bindWidgets
+     * DESCRIPTION
+     *      Binds each xml widget to a variable
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void bindWidgets() {
         txtName = (EditText) findViewById(R.id.txtName);
         txtLocation = (TextView) findViewById(R.id.txtLocation);
@@ -96,6 +126,15 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         rbtnOwnerOnly = (RadioButton) findViewById(R.id.rbtnOwnerOnly);
     }
 
+    /**
+     * NAME
+     *      EventEditor.setWidgetsToActiveEvent
+     * DESCRIPTION
+     *      Before the event is edited, its previous data must be displayed in the
+     *      widgets. Handled here.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private void setWidgetsToActiveEvent() {
 
         Event event = app.activeEvent;
@@ -145,6 +184,16 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         btnCreateEvent.setText("Edit Event");
     }
 
+    /**
+     * NAME
+     *      EventEditor.onClick
+     * SYNOPSIS
+     *      @param v - The view that was clicked
+     * DESCRIPTION
+     *      Handles the click events for various widgets.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -179,6 +228,15 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         }
     }
 
+    /**
+     * NAME
+     *      EventEditor.textWatcher
+     * DESCRIPTION
+     *      TextWatcher object used to enable/disable the Edit Event button
+     *      based on if name, location, and date are filled out.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private TextWatcher textWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {}
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -189,6 +247,14 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         }
     };
 
+    /**
+     * NAME
+     *      EventEditor.editEvent
+     * DESCRIPTION
+     *      Resends the current event to Firebase with the new data.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     protected void editEvent() {
         if (txtName.getText().toString().trim().length() == 0) {
             Toast.makeText(this, "Error: Name Required", Toast.LENGTH_LONG);
@@ -222,9 +288,21 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         Firebase newRef = app.mFirebaseRef.child("events").child(app.activeEventID);
         newRef.setValue(app.activeEvent);
         finish();
-
     }
 
+    /**
+     * NAME
+     *      EventEditor.onActivityResult
+     * SYNOPSIS
+     *      @param requestCode
+     *      @param resultCode
+     *      @param data
+     * DESCRIPTION
+     *      Handles the result from the PlacePicker fragment activity.
+     *      Sets the location data.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("PlacePicker", "Activity Result");
         if (requestCode == PLACE_PICKER_REQUEST){
@@ -240,6 +318,18 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         }
     }
 
+    /**
+     * NAME
+     *      EventEditor.onCreateDialog
+     * SYNOPSIS
+     *      @param id - 0 or 1 for which dialog to open
+     * DESCRIPTION
+     *      Opens either a DatePicker or TimePicker dialog
+     * RETURNS
+     *      @return Dialog - The dialog which was created. Null if invalid id.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     @Override
     @Deprecated
     protected Dialog onCreateDialog(int id) {
@@ -255,6 +345,15 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         return null;
     };
 
+    /**
+     * NAME
+     *      EventEditor.datePickerListener
+     * DESCRIPTION
+     *      datePickerListener object. Sets the month, day, and year after selection in the class
+     *      and widgets.
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
@@ -265,6 +364,15 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         }
     };
 
+    /**
+     * NAME
+     *      EventEditor.timePickerListener
+     * DESCRIPTION
+     *      timePickerListener object. Sets the start and end times after selection in the class
+     *      and widgets
+     * AUTHOR
+     *      @author Jesse Rinaldi
+     */
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int selectedHour,
                               int selectedMinute) {
