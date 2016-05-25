@@ -46,7 +46,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 public class EventEditor extends AppCompatActivity implements OnClickListener {
 
     private TextView txtLocation, txtDate, txtTimeStart, txtTimeEnd, activeTxt;
-    private EditText txtName, txtWebsiteLink, txtWebsiteTitle, txtDescription, txtTags;
+    private EditText txtName, txtWebsiteLink, txtWebsiteTitle, txtDescription, txtTags, txtPhotoURL;
     private Spinner spCategory;
     private RadioButton rbtnPublic, rbtnInviteOnly, rbtnOpen, rbtnOwnerOnly;
     private Button btnCreateEvent;
@@ -113,6 +113,7 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
         txtLocation = (TextView) findViewById(R.id.txtLocation);
         txtWebsiteLink = (EditText) findViewById(R.id.txtWebsiteLink);
         txtWebsiteTitle = (EditText) findViewById(R.id.txtWebsiteTitle);
+	    txtPhotoURL = (EditText) findViewById(R.id.txtPhotoURL);
         txtDescription = (EditText) findViewById(R.id.txtDescription);
         txtTags = (EditText) findViewById(R.id.txtTags);
         txtDate = (TextView) findViewById(R.id.txtDate);
@@ -279,6 +280,7 @@ public class EventEditor extends AppCompatActivity implements OnClickListener {
                 .setTime(startHour, startMinute, endHour, endMinute)
                 .setWebsite(txtWebsiteLink.getText().toString().trim())
                 .setWebsiteTitle(txtWebsiteTitle.getText().toString().trim())
+		.setPhotoURL(txtPhotoURL.getText().toString().trim())
                 .setBody(txtDescription.getText().toString().trim())
                 .setCategory(spCategory.getSelectedItem().toString())
                 .setTags(txtTags.getText().toString())
