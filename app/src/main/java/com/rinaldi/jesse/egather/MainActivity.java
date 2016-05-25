@@ -571,10 +571,12 @@ public class MainActivity extends AppCompatActivity {
                 Criteria criteria = new Criteria();
                 provider = lm.getBestProvider(criteria, false);
                 Location currentLocation = null;
-                try {
-                    currentLocation = lm.getLastKnownLocation(provider);
-                } catch (SecurityException se) {
-                    Log.e("SECURITY EXCEPTION", se.getMessage());
+                if (provider != null) {
+                    try {
+                        currentLocation = lm.getLastKnownLocation(provider);
+                    } catch (SecurityException se) {
+                        Log.e("SECURITY EXCEPTION", se.getMessage());
+                    }
                 }
                 if (currentLocation != null) {
                     double distance = DistanceCalculator.distance(currentLocation.getLatitude(), currentLocation.getLongitude(), e.getLatitude(), e.getLongitude(), "M");
